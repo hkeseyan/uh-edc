@@ -1,0 +1,203 @@
+.parallax{
+    background-image: url(/static/NavyFleetIMG.jpg);
+
+    height: 600px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-clip: content-box;
+    background-position: center;
+    background-attachment: fixed;
+}
+.popover{
+    border-width: 3px;
+    border-color: rgba(232,176,15,1);
+    border-radius: 2px;
+    background-color: rgba(179, 0, 3, 0.8);
+}
+.popover-body{
+    color: white;
+   font-family: Roboto-Bold;
+    font-weight: bold;
+    /*background-color:   rgba(255, 169, 167, 0.8);*/
+}
+@font-face {
+   font-family: Roboto;
+   src: url(/static/Fonts/Roboto-Regular.ttf);
+}
+@font-face {
+   font-family: Roboto-Bold;
+   src: url(/static/Fonts/Roboto-Bold.ttf);
+}
+.form-ui-submit{
+    position: fixed;
+    bottom: 20px;
+    right: 40px;
+}
+.form-ui-back{
+    position: fixed;
+    bottom: 20px;
+    right: 150px;
+}
+.form-ui-leftside{
+    position: fixed;
+    bottom: 20px;
+    left: 40px;
+}
+.alert-error{
+    font-family: Roboto-Bold;
+    font-size: 20px;
+    font-weight: bold;
+    color: rgb(255, 0, 3);
+}
+.btn-navigate{
+    margin:0 auto;
+    display: block;
+    width: auto;
+    border-radius: 10px;
+    border-color: white;
+    background-color: rgba(0,59,79,1);
+    color: white;
+    font-weight: bolder;
+    font-family: Roboto;
+}
+.btn-navigate:hover {
+    margin:0 auto;
+    display: block;
+    width: auto;
+    border-radius: 10px;
+    border-color: rgb(198,204,208);
+    background-color: rgba(8,129,153,1);
+    color: white;
+    font-weight: bolder;
+    font-family: Roboto;
+}
+.code-hyperlink{
+    width: auto;
+    height: auto;
+
+}
+.submit-btn{
+    width: 100px;
+    border-radius: 10px;
+    border-color: white;
+    background-color: rgba(0,59,79,1);
+    color: white;
+    font-weight: bolder;
+    font-family: Roboto;
+}
+.submit-btn:hover {
+    width: 100px;
+    border-radius: 10px;
+    border-color: rgb(198,204,208);
+    background-color: rgba(8,129,153,1);
+    color: white;
+    font-weight: bolder;
+    font-family: Roboto;
+}
+.file-upload{
+    width: 100px;
+    border-radius: 10px;
+    border-color: white;
+    background-color: rgba(0,59,79,1);
+    color: white;
+    font-weight: bolder;
+    font-family: Roboto;
+}
+.danger-text{
+    border-color: rgb(179,0,3);
+    border-width: 1px;
+    background-color: #ffdada;
+}
+.cancel{
+    width: 100px;
+    border-radius: 10px;
+    border-color: white;
+    background-color: rgba(0,59,79,1);
+    color: white;
+    font-weight: bolder;
+    font-family: Roboto;
+}
+.cancel:hover{
+    width: 100px;
+    border-radius: 10px;
+    border-color: rgb(179,0,3);
+    background-color: rgba(8,129,153,1);
+    color: white;
+    font-weight: bolder;
+    font-family: Roboto;
+}
+.btn-addFieldButton{
+    width: auto;
+    border-radius: 10px;
+    border-color: white;
+    background-color: rgba(0,59,79,1);
+    color: white;
+    font-weight: bolder;
+    font-family: Roboto;
+}
+.btn-addFieldButton:hover{
+    width: auto;
+    border-radius: 10px;
+    border-color: rgba(232,176,15,1);
+    background-color:  rgba(8,129,153,1);
+    color: white;
+    font-weight: bolder;
+    font-family: Roboto;
+}
+.center-horizontal{
+    width: auto;
+    margin:0 auto;
+    display: block
+}
+.info-text{
+    font-family: Roboto;
+    color: white;
+    margin-left: 10px;
+    font-size: small;
+}
+.row{
+    padding: 2px;
+}
+.col{
+    padding: 2px;
+}
+.h2-head{
+    font-family: Roboto;
+    color: white;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 39px;
+    margin-top: 20px;
+}
+.Tag{
+    font-family: Roboto;
+    color: white;
+    margin-left: 10px;
+    font-size: medium;
+
+}
+.row-container{
+    margin-top: 20px;
+    padding: 5px;
+    height: auto;
+    background-color: rgba(0,59,120,0.90);
+    border-radius: 5px;
+}
+.container-fluid label{
+    font-weight: bold;
+    color: white;
+    font-family: Roboto;
+    margin-left: 30px;
+}
+.container-fluid input{
+    font-family: Roboto;
+    width: 90%;
+}
+.container-fluid textarea{
+    font-family: Roboto;
+    width: 90%;
+}
+.icon_home{
+    width: 40px;
+    height: 40px;
+}
