@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ data_form.DataSetName }}</title>
+    <link rel="stylesheet" href="/static/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/FormStyle.css">
+    <script src="/static/popper.min.js"></script>
+    <script src="/static/jquery-3.3.1.min.js"></script>
+    <script src="/static/bootstrap.min.js"></script>
+</head>
+<body class="parallax"
+      onload="hyperlink()">
+    <header>
+        <div class="container-fluid">
+            <div class="row no-gutters row-container">
+                <h2 id="dataSetName" name="dataSetName"
+                    class="h2-head center-horizontal">{{ data_form.DataSetName }}</h2>
+            </div>
+        </div>
+    </header>
+    <form method="post" enctype="multipart/form-data">
+        <div class="container-fluid">
+            <div class="row no-gutters row-container">
+                <div class="col no-gutters">
+                    <label style="font-size: x-large">Contact Info</label>
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Owner's Name</th>
+                                <td>{{ data_form.DataOwnerName }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Owner's Organization</th>
+                                <td>{{ data_form.DataOwnerOrganization }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Phone Number</th>
+                                <td>{{ data_form.DataOwnerPhone }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Email</th>
+                                <td>{{ data_form.DataOwnerEmail }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Analyst's Name</th>
+                                <td>{{ data_form.AnalystName }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Interviewer's Name</th>
+                                <td>{{ data_form.InterviewerName }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col no-gutters">
+                    <aside>
+                        <div>
+                             <label style="font-size: large">{{ data_form.Header }}</label>
+                        </div>
+                    </aside>
+                    <aside style="width: auto;height: auto;background-color: rgba(128,128,128,0.60);margin: 10px; border-radius: 5px">
+                         <div>
+                             <label style="font-size: x-large">Tags</label>
+                         </div>
+                        <p class="Tag">{{ data_form.Tags }}</p>
+                    </aside>
+                </div>
+            </div>
+            <div class="row no-gutters row-container">
+                <div class="col no-gutters" style="margin-left: 3px">
+                    <label style="font-size: x-large">Properties</label>
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Created</th>
+                                <td>{{ data_form.Created }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Last Updated</th>
+                                <td>{{ data_form.LastUpdated }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Current Size</th>
+                                <td>{{ data_form.TotalSize }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Format</th>
+                                <td>{{ data_form.Format }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Records</th>
+                                <td>{{ data_form.InterviewerName }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col no-gutters">
+                    <label style="font-size: x-large">Fields</label>
+                       <table class="table table-bordered" >
+                           <thead>
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">Units</th>
+                                    <th scope="col">Tags</th>
+                                </tr>
+                           </thead>
+                           <tbody>
+                                {% for field in data_form.multipleFields %}
+                                    <tr>
+                                        <th scope="row">{{ field.name }}</th>
+                                        <td>{{ field.description }}</td>
+                                        <td>{{ field.units }}</td>
+                                        <td>{{ field.tags }}</td>
+                                    </tr>
+                                {% endfor %}
+                           </tbody>
+                       </table>
+                </div>
+            </div>
+            <div class="row no-gutters row-container">
+                <div class="col no-gutters">
+                    <div class="row">
+                        <label style="font-size: x-large">Visuals</label>
+                        <input type="submit" name="Button" value="Upload Image" class="submit-btn " style="width: auto">
+                        <input type="file" name="photo" id="photo" style="color: white; width: 70%;background-color: rgba(90,98,104,0.8)" placeholder="Choose File">
+                    </div>
+                    <div class="row">
+                        <img src="/static/img/{{ data_form.Image }}"style="margin: 10px" id="imgID">
+                    </div>
+                </div>
+                <div  class="col no-gutters">
+                    <div  class="row no-gutters">
+                        <label style="font-size: x-large">Data Download</label>
+                    </div>
+                    <div  class="row no-gutters">
+                        <div class="col-2 no-gutters">
+                            <input type="image" src="/static/Access_icon.png"
+                                   style="width: auto; height: auto"
+                                   name="accessButton">
+                        </div>
+                        <div class="col-2 no-gutters">
+                            <input type="image"
+                                   src="/static/CSV_icon.png"
+                                   style="width: auto; height: auto"
+                                   name="csvButton">
+                        </div>
+                        <div class="col-2 no-gutters">
+                            <input type="image"
+                                   src="/static/Excel_icon.png"
+                                   style="width: auto; height: auto"
+                                   name="excelButton">
+                        </div>
+                        <div class="col-2 no-gutters">
+                            <input type="image"
+                                   src="/static/JSON_Icon.png"
+                                   style="width: auto; height: auto"
+                                   name="jsonButton">
+                        </div>
+                    </div>
+                    <div  class="row no-gutters">
+                        <label style="font-size: x-large">Metrics Used</label>
+                    </div>
+                    <table>
+                        <tbody>
+                            <td>
+                                {{ data_form.MetricsCollected }}
+                            </td>
+                        </tbody>
+                    </table>
+                    <div  class="row no-gutters">
+                        <label style="font-size: x-large">Metrics needed</label>
+                    </div>
+                    <table>
+                        <tbody>
+                            <td>
+                                {{ data_form.MetricsToCollect }}
+                            </td>
+                        </tbody>
+                    </table>
+                    <div  class="row no-gutters">
+                        <label style="font-size: x-large">Code Library</label>
+                    </div>
+                    <div class="row no-gutters">
+                       <div class="col-2 no-gutters">
+                           <a name="sporkHyperlink" id="sporkHyperlink" href="{{ data_form.CodeLibrary }}">
+                               <img  src="/static/Spork_icon.png"
+                                    name="sporkButton"
+                                    class="code-hyperlink">
+                           </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="submit" name="Button" value="Back" class="cancel form-ui-back" style="width: auto">
+        <input type="submit" name="Button" value="Update" class="submit-btn form-ui-submit" style="width: auto">
+    </form>
+</body>
+<footer>
+    <script>
+        function hyperlink()
+        {
+            var regex = /https?:\/\/([a-zA-Z]\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+            var link = "{{ data_form.CodeLibrary }}";
+            if (!regex.exec(link) && link != null && link != undefined && link != '')
+            {
+                document.getElementById('sporkHyperlink').href = ("http://" + link);
+            }
+        }
+        $('#imgID').ready(function () {
+            if ($('#imgID').width() > 400)
+            {
+                $('#imgID').width("80%");
+            }
+
+            if ($('#imgID').height() > 400)
+            {
+                $('#imgID').height("60%");
+            }
+        });
+
+    </script>
+</footer>
+</html>

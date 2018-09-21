@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data Hub</title>
+    <link rel="stylesheet" href="/static/bootstrap.min.css">
+    <script src="/static/jquery-3.3.1.min.js"></script>
+    <script src="/static/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/HomePageStyle.css">
+    <style>
+        a {
+            font-size: x-large;
+            color: rgba(232,176,15,1);
+            margin-left: 10px;
+
+        }
+        a:hover{
+            font-size: x-large;
+            color: #ca7d00;
+            margin-left: 10px;
+
+        }
+        h5{
+            font-family: Roboto;
+            margin-left: 30px;
+        }
+
+        .row label{
+            margin-left: 30px;
+        }
+
+    </style>
+</head>
+<body class="parallax">
+    <form method="post">
+        <div class="container-fluid">
+            <div class="row row-container">
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <input type="submit" name="Button" value="New Metadata Form"
+                                   class="btn-navigate center-horizontal"
+                                   style="width: auto;margin:0 auto;display: block;">
+                        </div>
+                        <div class="col">
+
+                            <input type="submit" name="Button" id="profileButton" value="Blank Profile Page"
+                                   class="btn-navigate center-horizontal"
+                                   style="width: auto;margin:0 auto;display: block;">
+                            {% with error = get_flashed_messages(with_categories=true) %}
+                                {% if error %}
+                                    <ul >
+                                        {% for category, error in error %}
+                                            <li class="alert-error">{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-group mb-3" style="width: 50%;margin:0 auto;">
+                            <div class="input-group-prepend" >
+                                <div class="input-group-text" >
+                                    <input type="image" src="/static/search-icon_cropped.png" alt="Submit Form" value="search" name="Button" id="search_button_img" style="width: 20px;height: 25px">
+{#                                    <button type="submit" class="btn btn-outline-dark" name="searchButton"><img   c></button>#}
+                                </div>
+                            </div>
+                            <input type="text" placeholder="Search.." name="search"  class="form-control" aria-describedby="searchImage" style="height: auto; width: auto" id="search">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% if searching %}
+                <div class="row row-container">
+                    <div class="col" style="padding: 40px">
+                    {% if results != [] %}
+                        <label style="color: white;margin:0 auto ">{{ results|length }} results found</label>
+                        <span class="row no-gutters" style="width: available;height: 3px;background-color: lightgray"></span>
+                        {% for result in results %}
+                            {% if type_jinja(result) == "DataForm" %}
+                                <div class="row" style="margin-top: 10px">
+                                    <div class="col">
+                                        <div class="row">
+
+                                             <a href="/Profile/{{ result.DataSetID }}"  aria-describedby="database_img"><img src="/static/database-img.png" style="width: 10px;height: 15px;margin-left: 30px" id="database_img"> {{ result.DataSetName }}</a>
+                                        </div>
+                                        <div class="row">
+                                            <h5 style="color: white;" style="margin-top: 30px">{{ result.DataOwnerOrganization }}</h5>
+                                        </div>
+                                        <div class="row">
+                                            <label>{{ result.DataOwnerName }} <img src="/static/email_icon.png"  style="width: 30px;height: 35px">{{ result.DataOwnerEmail }} <img style="width: 10px;height: 13px" src="/static/contact_phone_icon.png"> {{ result.DataOwnerPhone }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="col">
+                                                <input type="image" src="/static/meta_icon.png" name="metaIcon" id="metaIcon" style="width: 50px;height: 50px;margin:0 auto ">
+                                                <div>
+                                                    <h5 style="color: white;margin:0 auto;font-family: Roboto-Bold;font-weight: bold">META</h5>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <input type="image" src="/static/visuals_icon.png" name="visualIcon" id="visualIcon" style="width: 50px;height: 50px;margin:0 auto ">
+                                                <div>
+                                                    <h5 style="color: white;margin:0 auto;font-family: Roboto-Bold;font-weight: bold">VIZ</h5>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <a href="{{ result.CodeLibrary }}" style="margin:0 auto">
+                                                    <image src="/static/Spork_icon.png" name="sporkIcon" id="sporkIcon" style="width: 50px;height: 50px;margin:0 auto "/>
+                                                </a>
+                                                <div>
+                                                    <h5 style="color: white;margin:0 auto;font-family: Roboto-Bold;font-weight: bold;margin:0 auto ">CODE</h5>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <input type="image" src="/static/wiki_icon.png" name="wikiIcon" id="wikiIcon" style="width: 50px;height: 50px;margin:0 auto ">
+                                                <div>
+                                                    <h5 style="color: white;margin:0 auto;font-family: Roboto-Bold;font-weight: bold">WIKI</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="row no-gutters" style="width: available;height: 2px;background-color: lightgray"></span>
+                            {% elif type_jinja(result) == "Field" %}
+                                <div class="row" style=" margin-top: 10px">
+                                    <div class="col">
+                                        <div class="row">
+                                             <a href="/Profile/{{ result.dataset[1:] }}" style="margin-left: 60px">Field: {{ result.name }}</a>
+                                        </div>
+                                        <div class="row" style="margin-left: 20px">
+                                            <h5 style="color: lightgray" >{{ result.description }}</h5>
+                                        </div>
+                                        <div class="row">
+                                            <label style="margin-left: 60px;color: lightgray">{{ result.units }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+
+                                    </div>
+                                </div>
+                                <span class="row no-gutters" style="width: available;height: 2px;background-color: lightgray"></span>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <h5 style="color: white;margin:0 auto ">Data not found</h5>
+                    {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </form>
+</body>
+<footer>
+    <script>
+        $('#search').keypress(function (event) {
+            if(event.keyCode == 13 || event.which == 13)
+            {
+                event.preventDefault();
+                $("#search_button_img").click();
+            }
+        });
+    </script>
+</footer>
+</html>

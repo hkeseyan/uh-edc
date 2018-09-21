@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Metadata Form Fields</title>
+    <link rel="stylesheet" href="/static/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/FormStyle.css">
+    <script src="/static/popper.min.js"></script>
+    <script src="/static/jquery-3.3.1.min.js"></script>
+    <script src="/static/bootstrap.min.js"></script>
+</head>
+<body class="parallax" >
+    <header>
+        <div style="visibility: hidden">
+            {% with error = get_flashed_messages(with_categories=true) %}
+                {% if error %}
+                    <ul class="flashes">
+                        {% for category, error in error %}
+                            {{ debug(error) }}
+                            <li id="errorMessage">{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+        </div>
+    </header>
+    <form action = "http://127.0.0.1:5000/FieldForm" method = post >
+        {{ data_form.csrf_token }}
+        <input type="hidden" id="deleteField" name="deleteField" value=" ">
+        <input type="hidden" name="DataSetID" value="{{ data_form.DataSetId }}">
+        <div style="margin: 10px;border-radius: 5px;background-color: rgba(0,59,120,0.90);padding: 5px;" class="container-fluid no-gutters">
+            <br>
+            <p class="h2-head">Field Names</p>
+            <ul  id="textfields">
+            {% for index in data_form.multipleFields %}
+
+                <div class="row">
+                    <div class="col">
+                        <button type="button"
+                                data-toggle="collapse"
+                                data-target="#{{ index.collapseButtonTargetID }}"
+                                id="{{ index.collapseButtonID }}"
+                                data-file-height="auto" data-file-width="auto"
+                                class="btn btn-addFieldButton"
+                                style="width: auto;text-align: center;">{{ index.name }}</button>
+                        <input type="submit"
+                               name="Button"
+                               value="Delete Field"
+                               class="cancel"
+                               style="width: auto;margin-left: 20px"
+                               onclick="toBeDeleted('{{ index.nameID }}')">
+                        <div id='{{ index.collapseButtonTargetID }}' class="collapse">
+                            <div>
+                                <label class="col-form-label">
+                                    Field: <input type="text"
+                                                  id="{{ index.nameID }}"
+                                                  value="{{ index.name }}"
+                                                  name="{{ index.nameID }}"
+                                                  class="form-control"
+                                                  placeholder="-Field Name-" onchange="nameUpdate(value,id)">
+                                </label>
+                            </div>
+                            <div>
+                                <label class="col-form-label" >Description:</label>
+                            </div>
+                            <div>
+                                <textarea id="{{ index.descriptionID }}"
+                                          name="{{ index.descriptionID }}"
+                                          rows="4"
+                                          cols="40"
+                                          class="form-control"
+                                          placeholder="-Description-">{{ index.description }}</textarea>
+                            </div>
+                            <div>
+                                <label class="col-form-label">
+                                    Units of Field: <input type="text" id="{{ index.unitsID }}"
+                                                           name="{{ index.unitsID }}"
+                                                           value="{{ index.units }}"
+                                                           class="form-control"
+                                                           placeholder="-Units-">
+                                </label>
+                            </div>
+                            <div>
+                                <label class="col-form-label">Tags:</label>
+                                <p class="info-text">place ';' between each tag</p>
+                            </div>
+                            <div>
+                                <textarea id="{{ index.tagsID }}"
+                                          name="{{ index.tagsID }}"
+                                          rows="4"
+                                          cols="40"
+                                          class="form-control"
+                                          placeholder="-Tags-">{{ index.tags }}</textarea>
+                            </div>
+                            <input id="fieldID" name="fieldID" type="hidden" value="{{ index.fieldID }}">
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            </ul>
+            <div class="row">
+
+            </div>
+        </div>
+
+        <button type="button" data-toggle="collapse" data-target="#AddFieldNameField" id="addFieldID" style="visibility: visible;"
+        class="btn-addFieldButton form-ui-leftside" onclick="addFieldClicked('addFieldID')">Add Field Name</button>
+        <div style="background-color: rgba(0,59,120,0.90); position: fixed; left: 40px; bottom: 20px;
+        width: 400px;border-radius: 20px;border-color: darkslategrey;border-width: 3px" id="AddFieldNameField"
+             class="collapse container" >
+            <p class="h2-head">Add Field Name</p>
+            <div>
+                <label class="col-form-label">
+                    Field: <input type="text" id="addFieldName"
+                                  name="addFieldName"
+                                  class="form-control"
+                                  placeholder="-Field Name-"
+                                    data-toggle="popover">
+                </label>
+            </div>
+            <div>
+                <label class="col-form-label" class="form-control">Description:</label>
+            </div>
+            <div>
+                <textarea id="addFieldDescription" name="addFieldDescription" rows="4" cols="40" class="form-control"
+                          placeholder="-Description-"></textarea>
+            </div>
+            <div>
+                <label class="col-form-label">
+                    Units of Field: <input type="text" id="addFieldUnits" name="addFieldUnits" class="form-control"
+                                           placeholder="-Units-">
+                </label>
+            </div>
+            <div>
+                <label class="col-form-label">Tags:</label>
+                <p class="info-text">place ';' between each tag</p>
+            </div>
+            <div>
+                <textarea id="addFieldTags" name="addFieldTags" rows="4" cols="40" class="form-control"
+                          placeholder="-Tags-" ></textarea>
+            </div>
+            <button type="button" data-toggle="collapse" data-target="#AddFieldNameField" id="closeAddFieldID" style="margin-top: 5px;float: left;display: inline"
+                class="cancel" onclick="addFieldClicked('addFieldID')">Close</button>
+            <input type="submit" name="Button" value="Add" class="btn-addFieldButton" style="float: right;width: auto;margin: 5px;display: inline">
+        </div>
+        <input type="submit" name="Button" value="Submit" class="submit-btn form-ui-submit" style="bottom: 20px;
+        right: 40px;width:auto">
+        <input type="submit" name="Button" value="Back" class="cancel form-ui-back" style="bottom: 20px; right: 120px;
+        text-align: center;width: 60px">
+    </form>
+</body>
+<footer>
+    <script>
+        function toBeDeleted(fieldID){
+            document.getElementById("deleteField").value = fieldID;
+        }
+        function nameUpdate(newName,id){
+            var idID = 'buttonID' + id;
+            document.getElementById(idID).innerText = newName;
+        }
+        function addFieldClicked(addFieldID){
+            console.log(document.getElementById(addFieldID).style.visibility);
+            if (document.getElementById(addFieldID).style.visibility == "visible" )
+            {
+                document.getElementById(addFieldID).style.visibility = "hidden";
+            }
+            else
+            {
+                document.getElementById(addFieldID).style.visibility = "visible";
+            }
+        }
+        $('#errorMessage').ready(function () {
+            console.log($('#errorMessage').html())
+            if ($('#errorMessage').html() == 'addFieldNameNonexistent')
+            {
+                var button = document.getElementById('addFieldID');
+                button.onclick.apply(button);
+                $('#AddFieldNameField').collapse();
+                $('#addFieldName').popover({content: "Field must have a name",trigger:"focus",placement:"top"});
+                var element = document.getElementById('addFieldName');
+                element.classList.add('danger-text');
+                element.focus();
+            }
+            else if ($('#errorMessage').html() != '')
+            {
+                $('#{{ error }}').popover({content: "Field must have a name",trigger:"focus",placement:"top"});
+                var element = document.getElementById('{{ error }}');
+                $('#{{ collapseID }}').collapse();
+                element.classList.add('danger-text');
+                element.focus();
+            }
+        });
+    </script>
+</footer>
+</html>

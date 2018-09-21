@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Metadata Form</title>
+    <link rel="stylesheet" href="/static/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/FormStyle.css">
+    <script src="/static/popper.min.js"></script>
+    <script src="/static/jquery-3.3.1.min.js"></script>
+    <script src="/static/bootstrap.min.js"></script>
+</head>
+<body class="parallax" onload="OnLoadSelection('{{ data_form.TotalSize[-2:] }}');OnLoadFrequency('{{ data_form.Frequency }}')">
+    <header>
+        <br>
+        <div class="row-container container-fluid no-gutters" style="height: 60px">
+            <h2 style="text-align: center;margin: 10px;font-family: Roboto;color: white;font-weight: 700;font-size: 30px; line-height: 39px;" id="headerInfo"
+            >Enter data that you are comfortable with having anyone search for</h2>
+        </div>
+        <div style="visibility: hidden">
+            {% with error = get_flashed_messages(with_categories=true) %}
+                {% if error %}
+                    <ul class="flashes">
+                        {% for category, error in error %}
+                            <li id="errorMessage">{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+        </div>
+    </header>
+    <br>
+    <form id="form" method="post" onsubmit="hyperlink()">
+            {{ data_form.csrf_token }}
+        <div class="container-fluid">
+            <div class="flex-lg-row row-container">
+                <label for="dataSetName" id="labelDataSetName">Data Set Name</label>
+                <div class="row no-gutters">
+                    <input type="text"
+                           id="dataSetName"
+                           name="dataSetName"
+                           class="form-control"
+                           placeholder="-Data Set Name-"
+                           data-toggle="popover"
+                            value="{{ data_form.DataSetName }}">
+                </div>
+            </div>
+            <div class="row no-gutters row-container" style="margin-top: 40px;">
+                <div class="col">
+                    <div class="row no-gutters">
+                        <div class="col">
+                            <label for="dataOwnerName" class="text-center">Data Owner's Name</label>
+                            <div>
+                                 <input type="text" value="{{ data_form.DataOwnerName }}"  id="dataOwnerName" name="dataOwnerName" class="form-control" placeholder="-Data Owner's Name-">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col">
+                            <label for="OrganizationSearchAdd">Data Owner Organization</label>
+                            <div class="row no-gutters">
+                                <div class="col">
+                                    <div class="input-prepend input-append">
+                                        <input type="text"
+                                           id="OrganizationSearchAdd"
+                                           name="OrganizationSearchAdd"
+                                           value="{{ data_form.DataOwnerOrganization }}"
+                                           class="form-control dropdown-toggle"
+                                           data-toggle="dropdown"
+                                            oninput="FilterOrganizations()"
+                                            onkeydown="function showDropDown() {
+                                              document.getElementById('OrganizationList').classList.toggle('show');
+                                            } "
+                                            onblur="function hideDropDown() {
+                                              document.getElementById('OrganizationList').classList.toggle('hide');
+                                            }"
+                                            autocomplete="off">
+                                        <ul class="dropdown-menu" style="width: 80%" id="OrganizationList">
+                                            <li><a class="dropdown-item-text" id="optionNoOrganization">N/A</a></li>
+                                            {% for orgs in data_form.organizations %}
+                                            <li class="dropdown-item-text" id="option{{ orgs }}"><a class="dropdown-item-text" id="optionNoOrganization">{{ orgs }}</a></li>
+                                            {% endfor %}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col">
+                            <label for="dataOwnerPhone">Data Owner Phone Number</label>
+                            <div>
+                                <input type="text"
+                                       id="dataOwnerPhone"
+                                       name="dataOwnerPhone"
+                                       value="{{ data_form.DataOwnerPhone }}"
+                                       class="form-control"
+                                       placeholder="-Data Owner's Phone Number-"
+                                       oninput="CheckPhoneNumber(id,value)">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col">
+                            <label for="dataOwnerEmail">Data Owner Email</label>
+                            <div>
+                                <input type="text"
+                                       id="dataOwnerEmail"
+                                       name="dataOwnerEmail"
+                                       value="{{ data_form.DataOwnerEmail }}"
+                                       class="form-control"
+                                       placeholder="-Data Owner's Email-"
+                                       oninput="checkEmail(id,value)">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col">
+                            <label for="analystName">Analyst Name</label>
+                            <div>
+                                <input type="text" id="analystName" name="analystName" value="{{ data_form.AnalystName }}" class="form-control" placeholder="-Analyst Name-">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col">
+                            <label for="interviewerName">Interviewer Name</label>
+                            <div>
+                                <input type="text" id="interviewerName" name="interviewerName" value="{{ data_form.InterviewerName }}" class="form-control" placeholder="-Interviewer Name-">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="row no-gutters">
+                        <div class="col">
+                            <label for="format">Format:</label>
+                            <input class="form-control" type="text" id="format" name="format" value="{{ data_form.Format }}" placeholder="-Format-">
+                        </div>
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col no-gutters">
+                            <label for="dataSize">Total size</label>
+                            <div class="row" >
+                                <div class="col-10">
+                                    <input class="form-control form-inline"
+                                           type="text"
+                                           id="dataSize"
+                                           name="dataSize"
+                                           value="{{ data_form.TotalSize[:-2] }}"
+                                           placeholder="-Total size-"
+                                            style="margin-left: 10px;width: 100%">
+                                </div>
+                                <div class="col-2">
+                                    <select class="form-control form-inline"
+                                            id="dataSizeType"
+                                            name="dataSizeType"
+                                            style="width: auto;margin-left: 5px"
+                                            >
+                                        <option id="optionSizeNone"></option>
+                                        <option id="optionKB">KB</option>
+                                        <option id="optionMB">MB</option>
+                                        <option id="optionGB">GB</option>
+                                        <option id="optionTB">TB</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col">
+                            <label for="frequencyIngestRate">Frequency</label>
+                            <div id="frequencyDiv">
+                                <select class="form-control"
+                                        id="frequencyIngestRate"
+                                        name="frequencyIngestRate"
+                                        oninput="CheckFrequency(id)"
+                                        style="margin: 3px; margin-left: 10px;width: 80%">
+                                    <option id="optionFrequencyNone"></option>
+                                    <option id="optionDaily">Daily</option>
+                                    <option id="optionWeekly">Weekly</option>
+                                    <option id="optionMonthly">Monthly</option>
+                                    <option id="optionQuarterly">Quarterly</option>
+                                    <option id="optionBiannual">Biannual</option>
+                                    <option id="optionAnnual">Annual</option>
+                                    <option id="optionBiennial">Biennial</option>
+                                    <option id="optionOther">Other</option>
+                                </select>
+                                <input type="text"
+                                       class="form-control"
+                                       id="frequencyOther"
+                                       name="frequencyOther"
+                                       value="{{ data_form.Frequency }}"
+                                       placeholder="-Frequency-"
+                                       style="visibility: hidden;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col">
+                            <label for="sourceOfData">Source / Collection method</label>
+                            <div>
+                                <input class="form-control" type="text" id="sourceOfData" name="sourceOfData" value="{{ data_form.Source }}" placeholder="-Source / Collection method-">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col">
+                            <label for="versionControl">Version of Software Used</label>
+                            <div>
+                                 <input class="form-control" type="text" id="versionControl" name="versionControl" value="{{ data_form.Version }}" placeholder="-Version of Software Used-">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col-3">
+                            <label for="archivingRules">Archiving Rules</label>
+                        </div>
+                        <div class="col-9">
+                            <textarea class="form-control" rows="2" cols="40" id="archivingRules" name="archivingRules"  placeholder="-Archiving Rules-">{{ data_form.ArchivingRules }}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row no-gutters row-container" style="margin-top: 40px;">
+                <div class="col">
+                    <div class="row no-gutters">
+                        <div class="col-3">
+                            <label for="headerInformation">Header</label>
+                        </div>
+                        <div class="col-9">
+                            <textarea class="form-control"  id="headerInformation" name="headerInformation" placeholder="-Header-">{{ data_form.Header }}</textarea>
+                        </div>
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col-3">
+                            <label for="tags">Tags</label>
+                            <p class="info-text">enter ';' between each tag</p>
+                        </div>
+                        <div class="col-9">
+                            <textarea  class="form-control"  id="tags" name="tags" placeholder="-Tags-">{{ data_form.Tags }}</textarea>
+                        </div>
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col-3">
+                            <label for="fieldNames">Field Names</label>
+                            <p class="info-text">use ';' to indicate a new field. Field name can not have single or double quotes </p>
+                        </div>
+                        <div class="col-9">
+                            <textarea  class="form-control" id="fieldNames" name="fieldNames" placeholder="-Field Names-">{{ data_form.FieldNames }}</textarea>
+                        </div>
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col-3">
+                            <label for="actionsTaken">What Actions Have Been Taken on the Data?</label>
+                            <p class="info-text">cleanup,parent/child relations</p>
+                        </div>
+                        <div class="col-9">
+                            <textarea class="form-control"  id="actionsTaken" name="actionsTaken" placeholder="-What Actions Have Been Taken on the Data?-">{{ data_form.ActionsTaken }}</textarea>
+                        </div>
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col">
+                            <label for="codeLibrary">Code Library</label>
+                            <div>
+                                <input type="text" id="codeLibrary" name="codeLibrary" placeholder="-Code Library-" value="{{ data_form.CodeLibrary }}" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="row no-gutters">
+                        <div class="col-3">
+                            <label for="metricsCollected">Current Metrics Collected from Data?</label>
+                        </div>
+                        <div class="col-9">
+                            <textarea class="form-control"  id="metricsCollected" name="metricsCollected" placeholder="-Current Metrics Collected from Data-">{{ data_form.MetricsCollected }}</textarea>
+                        </div>
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col-3">
+                            <label for="metricsToCollect">Metrics to Collect From Data?</label>
+                        </div>
+                        <div class="col-9">
+                            <textarea class="form-control"  id="metricsToCollect" name="metricsToCollect" placeholder="-Metrics to Collect From Data-">{{ data_form.MetricsToCollect }}</textarea>
+                        </div>
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col-3">
+                            <label for="dataDependencies">Data Dependencies</label>
+                        </div>
+                        <div class="col-9">
+                            <textarea  class="form-control" id="dataDependencies" name="dataDependencies" placeholder="-Data Dependencies-">{{ data_form.DataDependencies }}</textarea>
+                        </div>
+                    </div>
+                    <div class="row  no-gutters">
+                        <div class="col-4 checkbox">
+                            <label for="accessControl" style="display: inline">Requires request for access:<input type="checkbox" id="accessControl" name="accessControl" style="display: inline;" class="form-check-input"></label>
+                        </div>
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col-3">
+                            <label for="guidanceInAcquiring">Guidance in Acquiring Data</label>
+                        </div>
+                        <div class="col-9">
+                            <textarea rows="3" cols="40" id="guidanceInAcquiring" name="guidanceInAcquiring" class="form-control" placeholder="-Guidance in Acquiring Data-">{{ data_form.GuidanceInAcquiringData }}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row  no-gutters row-container" style="height: auto;margin-top: 40px;margin-bottom: 40px">
+                <div class="col">
+                    <div class="row  no-gutters">
+                        <div class="col-4">
+                           <label for="verificationOfData">Validation of Data Sets</label>
+                        </div>
+                        <div class="col-8">
+                            <textarea  class="form-control" rows="4" cols="40" id="verificationOfData" name="verificationOfData" placeholder="-Validation of Data Sets-">{{ data_form.VerificationOfData }}</textarea>
+                        </div>
+                    </div>
+                    <div class="row  no-gutters">
+                        <div class="col-4">
+                            <label for="concerns">Concerns About Uploading Data?</label>
+                        </div>
+                        <div class="col-8">
+                            <textarea class="form-control"  rows="4" cols="40" id="concerns" name="concerns" placeholder="-Concerns About Uploading Data?-">{{ data_form.SecurityConcerns }}</textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="row  no-gutters">
+                        <div class="col-4">
+                            <label for="SCG">Is there a SCG?:</label>
+                            <p style="font-family: 'Roboto';color: white;">aggregation rules</p>
+                        </div>
+                        <div class="col-8">
+                            <textarea  class="form-control" rows="4" cols="40" id="SCG" name="SCG" placeholder="-Is there a SCG?-">{{ data_form.SCG }}</textarea>
+                        </div>
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col-4">
+                            <label for="distributionStatement">Distribution Statement:</label>
+                        </div>
+                        <div class="col-8">
+                            <textarea class="form-control" rows="4" cols="40" id="distributionStatement" name="distributionStatement" placeholder="-Distribution Statement-">{{ data_form.DistributionStatement }}</textarea>
+                        </div>
+                    </div>
+                </div>
+                    <div>
+                        <input class="submit-btn form-ui-submit" id="toFieldDataSubmit" type="submit" name="Button" value="Field Data" style="width: auto;"><input class="cancel form-ui-back" type="submit" name="Button" value="Cancel" style="width: auto;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+<footer>
+    <script>
+        function OnLoadSelection(option)
+        {
+            if (option != undefined && option != null && option != '')
+            {
+                document.getElementById('option' + option).setAttribute('selected', 'selected');
+            }
+
+        }
+        function OnLoadFrequency(option)
+        {
+            console.log('OnLoadFrequency');
+            console.log(option);
+            if(option != undefined && option != null && option != '')
+            {
+                console.log('not empty')
+                if (option != 'Daily' &&
+                    option != 'Weekly' &&
+                    option != 'Monthly' &&
+                    option != 'Quarterly' &&
+                    option != 'Biannual' &&
+                    option != 'Annual' &&
+                    option != 'Biennial')
+                {
+                    console.log('is other');
+                    document.getElementById('optionOther').setAttribute('selected', 'selected');
+                    document.getElementById('frequencyOther').style.visibility = 'visible';
+                    document.getElementById('frequencyOther').value = option;
+                }
+                else
+                {
+                    console.log('else');
+                    document.getElementById('option' + option).setAttribute('selected', 'selected');
+                }
+            }
+        }
+        $('#errorMessage').ready(function () {
+            if ($('#errorMessage').html() == 'dataSetNameNonexistent')
+            {
+                $('#dataSetName').popover({content: "Data Set must have a name",trigger:"focus",placement:"top"});
+                var element = document.getElementById('dataSetName');
+                element.classList.add('danger-text');
+                element.focus();
+            }
+            else if ($('#errorMessage').html() == 'dataSetNameAlreadyExists')
+            {
+                $('#dataSetName').popover({content: "Data Set name already exists, choose another",trigger:"focus",placement:"top"});
+                var element = document.getElementById('dataSetName')
+                element.classList.add('danger-text');
+                element.focus();
+            }
+            else if ($('#errorMessage').html() == 'InvalidPhone')
+            {
+                $('#dataOwnerPhone').popover({content: "Enter a valid phone number (1112223333) (111-222-3333)",trigger:"focus",placement:"top"});
+                var element = document.getElementById('dataOwnerPhone').focus();
+                element.classList.add('danger-text');
+                element.focus();
+            }
+            else if ($('#errorMessage').html() == 'InvaildEmail')
+            {
+                $('#dataOwnerEmail').popover({content: "Enter a valid email (text@text.text)",trigger:"focus",placement:"top"});
+                var element = document.getElementById('dataOwnerEmail').focus();
+                element.classList.add('danger-text');
+                element.focus();
+            }
+        });
+        function CheckPhoneNumber(id, value)
+        {
+            var input = document.getElementById(id)
+            var regex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+
+            if (!regex.exec(value) && value != '')
+            {
+                input.classList.add('danger-text');
+            }
+            else
+            {
+                input.classList.remove('danger-text');
+            }
+        }
+        function checkEmail(id,value)
+        {
+            var input = document.getElementById(id)
+            var regex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+
+            if (!regex.exec(value) && value != '')
+            {
+                input.classList.add('danger-text');
+            }
+            else
+            {
+                input.classList.remove('danger-text');
+            }
+        }
+        function CheckFrequency(id)
+        {
+            console.log('Check Frequency');
+            var select = document.getElementById(id);
+            console.log(select[select.selectedIndex].value);
+            if (select[select.selectedIndex].value == 'Other')
+            {
+                document.getElementById('frequencyOther').style.visibility = 'visible';
+            }
+            else
+            {
+                document.getElementById('frequencyOther').style.visibility = 'hidden';
+            }
+        }
+        function FilterOrganizations()
+        {
+            console.log('FilterOrganizations');
+            input = document.getElementById('OrganizationSearchAdd');
+            filter = input.value.toUpperCase();
+            a = document.getElementById('OrganizationList').getElementsByTagName("a");
+            for(var i = 0; i < a.length; i++)
+            {
+                console.log(a[i].innerHTML.toUpperCase().indexOf(filter));
+                if (a[i].innerHTML.toUpperCase().indexOf(filter) > -1)
+                {
+                    a[i].style.display="";
+                }
+                else
+                {
+                    a[i].style.display = "none";
+                }
+            }
+        }
+        $(".dropdown-menu li a").click(function(){
+            var selText = $(this).text();
+            if (selText == 'N/A')
+            {
+                $("#OrganizationSearchAdd").val('');
+            }
+            else
+            {
+                $("#OrganizationSearchAdd").val(selText);
+            }
+        });
+        function hyperlink()
+        {
+            var regex = /https?:\/\/([a-zA-Z]\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+            var link = document.getElementById('codeLibrary').value;
+            if (!regex.exec(link) && link != null && link != undefined && link != '')
+            {
+                document.getElementById('codeLibrary').value = ("http://" + link);
+            }
+        }
+    </script>
+</footer>
+</html>
